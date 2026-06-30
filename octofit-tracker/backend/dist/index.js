@@ -1,23 +1,9 @@
-import express from 'express';
-import mongoose from 'mongoose';
-const app = express();
+import { createApp } from './app.js';
+import { getApiBaseUrl } from './config/baseUrl.js';
+import { connectDatabase, mongoUri } from './config/database.js';
 const port = Number(process.env.PORT ?? 8000);
-const mongoUri = process.env.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/octofit_db';
-const codespaceName = process.env.CODESPACE_NAME;
-const baseUrl = codespaceName
-    ? `https://${codespaceName}-8000.app.github.dev`
-    : `http://localhost:${port}`;
-app.use(express.json());
-app.get('/api/health', (_request, response) => {
-    response.json({
-        status: 'ok',
-        apiBaseUrl: baseUrl,
-        mongoUri,
-        mongoState: mongoose.connection.readyState,
-    });
-});
-void mongoose
-    .connect(mongoUri)
+const app = createApp();
+void connectDatabase()
     .then(() => {
     console.log(`MongoDB connected at ${mongoUri}`);
 })
@@ -25,5 +11,5 @@ void mongoose
     console.error('MongoDB connection failed:', error);
 });
 app.listen(port, () => {
-    console.log(`OctoFit Tracker backend listening at ${baseUrl}`);
+    console.log(`OctoFit Tracker backend listening at ${getApiBaseUrl(port)}`);
 });
