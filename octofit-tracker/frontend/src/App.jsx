@@ -1,11 +1,17 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
 import logo from './assets/octofitapp-small.png'
+import Activities from './components/Activities.jsx'
+import Leaderboard from './components/Leaderboard.jsx'
+import Teams from './components/Teams.jsx'
+import Users from './components/Users.jsx'
+import Workouts from './components/Workouts.jsx'
+import { getApiBaseUrl, isUsingLocalFallback } from './components/resourceUtils.jsx'
 import './App.css'
 
 const activityHighlights = [
-  'Daily workout check-ins and session history',
-  'Team progress snapshots and shared goals',
-  'Leaderboard momentum across weekly challenges',
+  'Users, teams, and activities now load from the live backend API.',
+  'Leaderboard and workout views stay compatible with array or paginated payloads.',
+  'Codespaces host support is driven by Vite env vars with a localhost fallback.',
 ]
 
 const quickStats = [
@@ -14,7 +20,19 @@ const quickStats = [
   { label: 'Database', value: 'MongoDB via Mongoose' },
 ]
 
+const primaryRoutes = [
+  { to: '/', label: 'Overview', end: true },
+  { to: '/users', label: 'Users' },
+  { to: '/teams', label: 'Teams' },
+  { to: '/activities', label: 'Activities' },
+  { to: '/leaderboard', label: 'Leaderboard' },
+  { to: '/workouts', label: 'Workouts' },
+]
+
 function HomePage() {
+  const apiBaseUrl = getApiBaseUrl()
+  const usingLocalFallback = isUsingLocalFallback()
+
   return (
     <div className="octofit-page">
       <section className="hero-panel shadow-lg">
@@ -25,6 +43,22 @@ function HomePage() {
             A single place for athletes and teams to log activity, compete on
             leaderboards, and surface personalized workout suggestions.
           </p>
+          <div className="api-banner-list">
+            <div className="callout-banner subtle-banner">
+              Active API base URL: <strong>{apiBaseUrl}</strong>
+            </div>
+            <div className="callout-banner warning-banner">
+              Define <strong>VITE_CODESPACE_NAME</strong> in <strong>.env.local</strong>
+              {' '}for Codespaces previews. When it is unset, the UI safely falls back to
+              {' '}<strong>http://localhost:8000</strong>.
+            </div>
+            {usingLocalFallback ? (
+              <div className="callout-banner subtle-banner">
+                Localhost mode is active to avoid generating an invalid
+                {' '}<strong>https://undefined-8000.app.github.dev</strong> URL.
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className="hero-mark">
           <img src={logo} alt="OctoFit Tracker logo" />
@@ -51,34 +85,24 @@ function HomePage() {
         </article>
 
         <article className="feature-card shadow-sm accent-card">
-          <h2>Service ports</h2>
+          <h2>Host behavior</h2>
           <dl>
             <div>
               <dt>Frontend</dt>
-              <dd>5173</dd>
+              <dd>5173 via Vite</dd>
             </div>
             <div>
               <dt>Backend</dt>
-              <dd>8000</dd>
+              <dd>8000 via Express</dd>
             </div>
             <div>
-              <dt>MongoDB</dt>
-              <dd>27017</dd>
+              <dt>Codespaces URL</dt>
+              <dd>https://$VITE_CODESPACE_NAME-8000.app.github.dev</dd>
             </div>
           </dl>
         </article>
       </section>
     </div>
-  )
-}
-
-function PlaceholderPage({ title, body }) {
-  return (
-    <section className="placeholder-card shadow-sm">
-      <p className="eyebrow">Coming next</p>
-      <h1>{title}</h1>
-      <p className="hero-copy">{body}</p>
-    </section>
   )
 }
 
@@ -95,32 +119,21 @@ function App() {
         </div>
 
         <nav className="nav-links" aria-label="Primary">
-          <NavLink to="/">Overview</NavLink>
-          <NavLink to="/leaderboard">Leaderboard</NavLink>
-          <NavLink to="/workouts">Workouts</NavLink>
+          {primaryRoutes.map((route) => (
+            <NavLink end={route.end} key={route.to} to={route.to}>
+              {route.label}
+            </NavLink>
+          ))}
         </nav>
       </header>
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/leaderboard"
-          element={
-            <PlaceholderPage
-              title="Leaderboard"
-              body="Competitive team rankings and challenge summaries will plug into the backend API on port 8000."
-            />
-          }
-        />
-        <Route
-          path="/workouts"
-          element={
-            <PlaceholderPage
-              title="Workout Suggestions"
-              body="Personalized recommendations will be sourced from MongoDB-backed training data in octofit_db."
-            />
-          }
-        />
+        <Route path="/users" element={<Users />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/activities" element={<Activities />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/workouts" element={<Workouts />} />
       </Routes>
     </div>
   )
