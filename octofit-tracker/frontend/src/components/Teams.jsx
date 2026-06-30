@@ -1,10 +1,15 @@
 import { ResourcePage } from './resourceUtils.jsx'
 
+const teamsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : 'http://localhost:8000/api/teams/'
+
 function Teams() {
   return (
     <ResourcePage
       title="Teams"
       summary="Squads are ranked here by momentum, points, and local identity from the teams API."
+      endpointExample={teamsEndpoint}
       resourceName="teams"
       emptyMessage="No teams are available yet. Seed the API or add team records to populate this view."
       renderItems={(items) => (

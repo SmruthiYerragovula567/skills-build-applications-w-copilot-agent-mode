@@ -1,10 +1,15 @@
 import { ResourcePage } from './resourceUtils.jsx'
 
+const leaderboardEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/'
+
 function Leaderboard() {
   return (
     <ResourcePage
       title="Leaderboard"
       summary="Competitive rankings and streak data come from the leaderboard endpoint and surface team progress at a glance."
+      endpointExample={leaderboardEndpoint}
       resourceName="leaderboard"
       emptyMessage="No leaderboard entries are available yet. Seed the API or add ranking records to populate this view."
       renderItems={(items) => (

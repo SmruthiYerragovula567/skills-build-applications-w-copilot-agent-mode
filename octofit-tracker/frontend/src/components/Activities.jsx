@@ -1,10 +1,15 @@
 import { ResourcePage } from './resourceUtils.jsx'
 
+const activitiesEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/activities/`
+  : 'http://localhost:8000/api/activities/'
+
 function Activities() {
   return (
     <ResourcePage
       title="Activities"
       summary="Recent training sessions stream from the activities endpoint, with populated user context from MongoDB."
+      endpointExample={activitiesEndpoint}
       resourceName="activities"
       emptyMessage="No activities are available yet. Seed the API or add activity records to populate this view."
       renderItems={(items) => (

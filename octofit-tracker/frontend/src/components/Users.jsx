@@ -1,10 +1,15 @@
 import { ResourcePage } from './resourceUtils.jsx'
 
+const usersEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  : 'http://localhost:8000/api/users/'
+
 function Users() {
   return (
     <ResourcePage
       title="Users"
       summary="Athlete profiles, training goals, and team affiliations come from the backend users endpoint."
+      endpointExample={usersEndpoint}
       resourceName="users"
       emptyMessage="No users are available yet. Seed the API or add user records to populate this view."
       renderItems={(items) => (

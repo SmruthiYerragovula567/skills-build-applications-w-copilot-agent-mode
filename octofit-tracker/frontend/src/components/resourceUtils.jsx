@@ -122,6 +122,7 @@ export function useApiCollection(resourceName) {
 export function ResourcePage({
   title,
   summary,
+  endpointExample,
   resourceName,
   emptyMessage,
   renderItems,
@@ -141,7 +142,7 @@ export function ResourcePage({
         <div className="resource-meta-grid">
           <div className="resource-meta-card">
             <span>Endpoint</span>
-            <strong>{endpoint}</strong>
+            <strong>{endpointExample ?? endpoint}</strong>
           </div>
           <div className="resource-meta-card">
             <span>Records</span>

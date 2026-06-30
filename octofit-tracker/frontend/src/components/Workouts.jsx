@@ -1,10 +1,15 @@
 import { ResourcePage } from './resourceUtils.jsx'
 
+const workoutsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  : 'http://localhost:8000/api/workouts/'
+
 function Workouts() {
   return (
     <ResourcePage
       title="Workouts"
       summary="Suggested sessions load from the workouts endpoint, with difficulty, equipment, and coach guidance intact."
+      endpointExample={workoutsEndpoint}
       resourceName="workouts"
       emptyMessage="No workouts are available yet. Seed the API or add workout records to populate this view."
       renderItems={(items) => (
